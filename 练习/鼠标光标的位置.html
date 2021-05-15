@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style type="text/css">
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #home{
+            width: 300px;
+            height: 200px;
+            background-color:antiquewhite;
+            margin: 30px auto;
+        }
+        #cursor{
+            background-color: aliceblue;
+            width: 300px;
+            height: 30px;
+            line-height: 30px;
+            margin: 0 auto;
+            font-family: "微软雅黑";
+            text-align: center;
+        }
+    </style>
+
+    <script type="text/javascript">
+        window.onload = function(event){
+            var home = document.querySelector("#home");
+            var cursor = document.querySelector("#cursor");
+            home.onmousemove = function(event){
+                event = event || window.event;
+                var x = parseInt(event.clientX);
+                var y = parseInt(event.clientY);
+                cursor.innerHTML = "x=" + x + ",y=" + y;
+            }
+        }
+        
+    </script>
+</head>
+<body>
+    <div id="home"></div>
+    <div id="cursor">x=0,y=0</div>
+    
+</body>
+</html>

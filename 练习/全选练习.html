@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script type="text/javascript">
+			function gather(check,reverse=0){
+					var all = document.getElementById("all");
+					var ball = document.getElementsByName("workout");
+					all.checked = check;
+					for(var i = 0;i<ball.length;i++){
+						if(!reverse){
+							ball[i].checked = check;	//全选 or 全不选
+						}else{
+							ball[i].checked = !ball[i].checked;		//反选
+							test();
+						}
+					}
+				}
+			
+			function test(){
+				var all = document.getElementById("all");
+				var ball = document.getElementsByName("workout");
+				for (var i = 0,flag=1;i<ball.length;i++){
+					if (!ball[i].checked){
+						flag = 0;
+						break;
+					}
+				}
+				all.checked = !flag?false:true;
+				
+			}
+
+			window.onload = function(test){	
+
+				var go = document.getElementById("goUp");
+				var ball = document.getElementsByName("workout");
+				go.onclick = function(){
+					var arr = [];
+					for(var i = 0;i<ball.length;i++){
+						if(ball[i].checked){
+							arr.push(ball[i].value)
+						}
+					}
+					alert(arr);
+				}
+
+				//在事件的响应函数中，this是响应函数绑定的那个节点
+				var headAll = document.getElementById("all");
+				/* var ball = document.getElementsByName("workout"); */
+				headAll.onclick = function(){
+					for(var i = 0;i<ball.length;i++){
+						ball[i].checked = this.checked;
+					}	
+				};
+				
+				ball.onclick = function(){
+					alert("hehe");
+				}
+				
+				for (var i = 0;i<ball.length;i++){
+					ball[i].onclick = test();
+				}
+				
+			}
+			var cls = document.getElementsByClassName("one");
+		</script>
+	</head>
+	<body>
+		<span>你爱好的运动是？</span>
+		<input type="checkbox" name="checkAll" id="all" />全选/全不选
+		<br/>
+		<input type="checkbox" name="workout" value="足球" onclick="test()"/>足球
+		<input type="checkbox" name="workout" value="篮球" onclick="test()"/> 篮球
+		<input type="checkbox" name="workout" value="羽毛球" onclick="test()"/> 羽毛球
+		<input type="checkbox" name="workout" value="乒乓球" onclick="test()"/> 乒乓球
+		<br/>
+		<input type="button" id="optionAll" value="全选" onclick="gather(true)" />
+		<input type="button" id="noCheck" value="全不选" onclick="gather(false)"/>
+		<input type="button" id="revCheck" value="反选" onclick="gather(false,1)"/>
+		<input type="button" id="goUp" value="提交" />
+		
+	</body>
+</html>

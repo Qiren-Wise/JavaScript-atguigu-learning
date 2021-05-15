@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+	<script type="text/javascript">
+		// 在页面接受一个用户输入的整数，判断该数是否为质数。质数：只能被1和它自身整除的数，1不是质数也不是合数，质数必须是大于1的自然数。
+		
+		/*for(var one=1,num = prompt("请输入一个大于1的自然数：");zhi=num;num>2){
+			--num;
+			if(zhi%num == 0){
+				one=0;
+			}
+		}
+		if(one==1){
+			document.write("该数是质数");
+		}else{
+			document.write("该数不是质数");
+		}*/
+
+//====================================================================================================================================
+		// 打印100以内的质数--老师做法
+		console.time("test");
+		document.write("一百以内的质数有：")
+		for(var i=2; i<=100000; i++){
+			var flag = true;
+			for(var j=2; j<=Math.sqrt(i); j++){
+				if(i%j==0){
+					flag=false;
+					break;
+				}
+			}
+			if(flag==true){
+				document.write(i + "&nbsp;&nbsp;")
+			}
+		}
+		console.timeEnd("test");
+		
+	</script>
+</head>
+
+<body>
+</body>
+</html>

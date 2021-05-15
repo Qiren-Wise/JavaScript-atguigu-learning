@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>示例3</title>
+    <script type="text/javascript">
+        window.onload = function(){
+            var submit = document.querySelector("#go");
+            submit.onclick = function(){    //提交
+                var item = document.getElementsByName("item");
+                for (var i = 0,message=[];i<item.length;i++){
+                    message.push(item[i].value);
+                }
+                message.push("删除");
+
+                var tbody = document.querySelector("tbody");
+                var tr = document.createElement("tr");
+                for (i = 0;i<message.length;i++){
+                    if (i != 3){
+                        tr.innerHTML += "<td>" + message[i] + "</td>";
+                    }else{
+                        tr.innerHTML += "<td><a onclick='del(this)'>" + message[i] + "</a></td>"
+                        
+                    }
+                    
+                }   
+                tbody.appendChild(tr);             
+            }
+        }
+        
+        function del(obj){ 
+            var a = obj.parentNode.parentNode;
+            var ask = confirm("真的要删除么？");
+            if(ask){
+                a.parentNode.removeChild(a);
+            }
+        }
+
+    </script>
+    <style type="text/css">
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        #all{
+            border:double 3px red;
+            width: 500px;
+            height: 700px;
+            margin:50px auto;
+            text-align: center;
+            flex-direction: column;
+        }
+        #tab{
+            margin: 50px auto;
+            width: 400px;
+            height: 30px;
+            line-height: 30px;
+        }
+        #add{
+            width: 400px;
+            height: 200px;
+            border: 2px solid rgb(123, 177, 238);
+            margin: 0 auto;
+            padding-top: 25px;
+            
+        }
+        #add p{
+            margin: 10px;
+        }
+        input{
+            margin-left: 10px;
+        }
+        #go{
+            width: 100px;
+            height: 25px;
+            font-size: 15px;
+            font-family: "微软雅黑";
+            line-height: 25px;
+        }
+        #tab a{
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="all">
+        <table border="1px" id="tab">
+            <tr>
+                <th>姓名</th>
+                <th>电子邮箱</th>
+                <th>工资</th>
+                <th>记录</th>
+            </tr>
+            <tr>
+                <td>张三</td>
+                <td>123@qq.com</td>
+                <td>5000</td>
+                <td><a class="as" onclick="del(this)">删除</a></td>
+            </tr>
+            <tr>
+                <td>李四</td>
+                <td>15654@qq.com</td>
+                <td>3500</td>
+                <td><a class="as" onclick="del(this)">删除</a></td>
+            </tr>
+            <tr>
+                <td>王五</td>
+                <td>31321@qq.com</td>
+                <td>6000</td>
+                <td><a class="as" onclick="del(this)">删除</a></td>
+            </tr>
+        </table>
+        <div id="add">
+            <h3>添加新员工</h3>
+            <p>姓名:<input type="text" name="item" id="name"/></p>
+            <p>邮箱:<input type="text" name="item" id="email"/></p>
+            <p>工资:<input type="text" name="item" id="salary"/></p>
+            <p><input type="submit" name="go" id="go" value="提交"/></p>
+        </div>
+    </div>
+</body>
+</html>
