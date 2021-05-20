@@ -1,0 +1,17 @@
+P111. 事件对象
+> onmousemove		—— 拓展
+	- 此事件会在鼠标移动时除法
+
+> 事件对象
+	- 当事件的响应函数触发时，浏览器都会将一个事件对象作为实参传入响应函数
+		该事件对象封装了当前事件相关的一切信息，如：鼠标的坐标，键盘的哪个键被按下....
+			可参考网页：https://www.w3school.com.cn/jsref/dom_obj_event.asp
+		注意：事件对象在IE8及以下版本的浏览器时作为window的属性，即作为全局变量存在的，而不是传参
+				但是有些浏览器又不作为全局变量传参，这时候我们需要做一个简单的判断
+					如： //假设此时event是传入的实参事件对象
+					event = event || window.event;		//我们用一个简单的或运算，如果event存在就接着保持，为false就为window.event
+					var x = parseInt(event.clientX);
+					var y = parseInt(event.clientY);
+					
+	- clientX 和 clientY
+		获取当前鼠标的水平坐标和垂直坐标

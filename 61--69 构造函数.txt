@@ -1,0 +1,199 @@
+P61. this参数
+解析器每次调用函数都会向函数内部传递进一个隐含的参数
+	这个隐含的参数就是this，this指向的是一个对象，上下文对象
+		根据函数的调用方式不同，this指向的对象也不同
+			1. 以函数的形式调用时，this永远都是window
+			2. 以方法的形式调用时，this就是调用方法的那个对象
+			如：
+			function fun(){
+				console.log(this);
+				document.write(this.name);
+			}
+			var name = "孙悟空";
+			fun();		//这里我们调用fun()函数，我们是以函数的形式调用的，所以指向的也是window，而this.name也就相当于window.name，会输出'孙悟空'.
+			
+			var obj = {
+				name :"猪八戒",
+				sayName:fun	//这里把函数对象赋值给对象中的属性
+			}
+			obj.sayName();	//由于已经把函数赋值给它，所以调用它就相当于调用函数，这时候就会发现，this指向的不是window了，而是'obj'这个对象
+											我们输入this.name相当于调用'obj'对象中的name属性，会输出'猪八戒'			
+			补充：
+				我们在一个函数中如果不使用this参数来调用变量的话，默认都是指向全局变量
+				
+	
+P63. 使用工厂方法创建对象
+- 什么叫工厂呢？
+	就是你想要大批量的生产某个函数，我们就可以用工厂方法
+	案例：
+	<script type="text/javascript">
+
+			function createPerson(name,age,gender){		//这里接受三个变量
+				var obj = new Object();		
+				obj.name = name;
+				obj.age = age;
+				obj.gender = gender;
+				obj.sayName = function(){
+					alert(this.name);
+				}
+				return obj;
+			}
+			
+			var obj2 = createPerson("猪八戒",20,"男");		//我们这里只需要传入三个变量，就可以将大量的重复对象继承过来
+			var obj3 = createPerson("沙和尚",25,"男");
+			var obj4 = createPerson("白骨精",19,"女");
+			
+			console.log(obj2);
+			console.log(obj3);
+			console.log(obj4);
+			obj3.sayName();
+		</script>
+		
+		
+P64. 构造函数
+- 使用工厂方法创建的对象，使用的构造函数都是Object
+	所以创建的对象都是Object这个类型，就会导致我们没法儿区分多种不同类型的对象
+- 为了区分这些对象，我们可以创建一个构造函数，专门用来创建某个对象的
+	构造函数就是一个普通的函数，创建方式和普通函数没有区别，
+	不同的是构造函数习惯首字母大写，就如同Object一样
+	
+- 构造函数和普通函数最大的不同就是调用方式不同
+	普通函数是直接调用，而构造函数是使用new关键字调用
+	
+- 构造函数的执行流程：
+	1.	立即创建一个新的对象
+	2. 将新建的对象设置为函数中的this，在构造函数中可以使用this来引用新建的对象
+	3. 逐行执行函数中的代码
+	4.	将新建的对象作为返回值返回
+	举例：
+	function Person(name,age){		//创建一个名为Person的函数
+			this.name = name;		//这里的this指向的就是下面创建的per，和python相同
+			this.age = age;
+	}
+			
+	var per = new Person("孙悟空",3);	//将Person作为构造函数
+	console.log(per);		//这里能打印出姓名和年龄
+- 使用构造函数创建的对象，我们称为一类对象，也将构造函数称为一个类
+	我们通过构造函数创建的对象，称为该类的实例
+		我们使用instanceof可以检查一个对象是不是一个类的实例，返回true或false
+		语法：
+			对象 instanceof 构造函数
+		注意：所有的对象都是Object的后代，所有任何对象和Object做instanceof检查时，都会返回true
+- this 的情况：
+	1. 当以函数的形式调用时，this时window
+	2. 当以方法的形式调用时，谁调用this就是谁
+	3. 当以构造函数调用时，this就是新创建的哪个对象
+	
+- 创建一个构造函数
+	在构造函数中，假设我们为每一个对象都添加了sayName方法，
+		目前我们的方法实在构造函数内创建的，那么我们每调用一次就会创建一个新的sayName方法
+	也就是所有示例的sayName都是唯一的
+	这样就导致我们每执行一次构造函数就会创建一个新的方法，这样会导致大量的内存浪费，我们可以优化这种方法
+	如：	
+		function fun(name,age,gender){
+				this.name = name;
+				this.age = age;
+				this.gender = gender;
+				this.sayName = fun2;	//将函数fun2赋给sayName
+			}
+			function fun2(){
+					alert(this.name);
+			}		//这样不管我们调用的是x这个对象的sayName方法还是y这个对象的sayName方法，其实指向的都是同一个函数
+			var x = new fun("孙悟空",18,"男");
+			var y = new fun("马大炮",18,"男");
+			y.sayName();
+	
+P66. 原型对象
+- 原型prototype
+	我们所创建的每一个函数，解析器都会向函数中添加一个属性prototype
+		这个属性对应着一个对象，这个对象就是我们的原型对象
+		函数作为普通对象调用没有任何作用
+			但当函数以构造函数进行调用时，它创建的对象都会有一个隐含属性
+				指向该构造函数的原型对象，我们可以通过'__proto__'来访问该属性（双下划线）
+	- 原型对象相当于一个公共区域，所有同一个类的实例都可以访问到这个原型对象
+		我们可以将对象中共有的内容，统一设置到原型对象中
+			向一个对象MyClass中添加原型对象的属性，如：MyClass.prototyoe.a = 123;   //注意：此时的MyClass里面是没有a的，只是原型对象中有了	
+				//当我们访问对象的一个属性或方法时，它会先在对象的自身中寻找，有则直接使用，没有则去原型对象中找，找到直接使用
+				所有上面的例子如果我们'console.log(MyClass.a);' 对象自身找不到会调出原型对象的a来显示，但是如果我们给对象添加一个a属性
+				如：MyClass.a = '张三';		//此时就不会再去原型对象中找了
+	- 给函数添加原型对象用"prototype.名称",  给对象添加原型对象用"__proto__.名称"
+	- 以后我们创建函数时，可以将这些属性共有的属性和方法，统一添加到构造函数的原型对象中
+		这样就不用分别为每个对象添加，也不会影响全局作用域，还可以使每个对象都可以调用这些对象和方法
+		
+- 使用in检查对象是否含有某个属性时，如果对象的原型中有，也会返回true
+	我们可以用"对象.hasOwnProperty("属性名")"来检查，只有自身对象中的属性才会返回true
+	原型对象也有个原型对象，我们查找一个对象的方法时，如果自身对象没有，会去原型对象里找，如果原型对象没有，会去原型对象的原型对象里找.....
+		直到找到Object对象的原型，如果还没有，就返回null	
+		这里的hasOwnProperty()就是原型对象中的原型对象的方法
+		
+P68. toString()
+- 我们在HBuilder中用'console.log()'方法输入对象的时候，会发现会输出"[Object Object]"(高版本的浏览器已经是对象本身的所有属性了）
+	这是因为其实我们直接输出对象的时候，其实是输出的toString()方法，console.log(Person);  和  console.log(Person.toString())是一样的
+	toString()是原型对象的原型对象中的方法，也就是Object原型对象的方法，所有不管任何对象，使用此方法的返回值都是"[Object Object]"
+- 但是toString()只能输出"[Object Object]"未免太鸡肋了，我们可以重写toString()方法，如：
+	Person.toString = function(){
+		return "Person[name=" + this.name + "age=" +this.age + "]";
+	}
+	并且我们还可以把它修改为原型对象中的toString()，这样该函数的所有实例化对象都可以访问到这个方法了，如：
+	Person.prototyoe.toString = function(){
+		return "Person[name=" + this.name + "age=" +this.age + "]";
+	}
+	
+
+
+
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,182 @@
+P102.  DOM增删改
+	- document.createElement("li");
+		可以用于创建一个元素节点对象
+			他需要一个标签名作为参数，将会根据改标签名创建元素节点对象，并将创建好的对象返回
+	- document.createTextNode("广州");
+		可以用来创建文本节点对象
+			需要一个文本内容传参，将会根据该内容创建文本节点，并将新的节点返回
+	- appendChind()
+		像一个父节点中创建一个新的子节点
+		语法：父节点.appendChind(子节点);
+	- insertBefore()
+		可以在指定子节点前插入新的子节点，如果没有指定旧节点，默认创建在父节点的末尾
+		语法：父节点.insertBefore(新节点，旧节点);
+			可以简单看成在父节点上，把新节点放在旧节点前面
+	- replaceChild()
+		可以使用指定的子节点替换已有的子节点
+		语法：父节点.replaceChild(新节点，旧节点);
+	- removeChild()
+		删除指定的子节点 
+		语法：父节点.removeChild(子节点);
+	# 不过父节点我们一般可以不用特意再去声明，可以直接使用：子节点.parentNode.removeChild(子节点); 上面的同理
+	
+	- 此外，我们创建一个新的节点还可以使用innerHTML的方式:
+		如：
+			var city = document.querySelector("#city");
+			city.innerHTML += "<li>广州</li>";		
+			//不过这种添加方式有一个弊端，利用appendChild()创建的子节点只会影响该子节点，而这种方法创建的子节点，会把其他兄弟节点都影响了
+				实际应用中我们要两者结合使用
+		如：
+			var city = document.querySelector("#city");
+			var li = document.createElement("li");
+			li.innerHTML = "广州";		// 这里添加广州的文本我们不采用document.createTextNode()的方法
+			city.appendChild(li);
+		原例可以查看练习文件夹中的"DOM增删改.html"
+
+P103. DOM练习
+点击超链接后会跳转到另一个页面，这是超链接的默认行为
+	如果希望点击一个超链接后不要跳转到新的页面，我们可以为此超链接绑定一个单击响应函数，最后return false来取消默认行为
+	
+- confirm()
+	用于弹出一个带有确定和取消按钮的对话框，括号内填需要显示的内容，确定返回true，取消返回false
+- 单击响应函数调用的方式不同，this指向的对象也不同
+	1. 如果单击响应函数的单击事件是在js中定义的，那么谁调用的，this就是谁
+		如：
+			a.onclick = function(){
+                    alert(this.innerHTML);
+			}	//这里的this就是a这个元素节点本身，this.innerHTML就是获取它本身的文本
+	2. 如果单击响应函数的单击事件是在HTML标签中定义的，那么this默认是window，我们可以把this作为参数传进去
+		如：
+			<script type="text/javascript">
+				function del(obj){		//定义一个obj来接受this
+					alert(obj.innerHEML);	//这时候obj就等于a这个元素节点
+				}
+			</script>
+			<body>
+				<a onclick="del(this)">删除</a>	//这里把this作为参数传到该函数中
+			</body>
+			
+			
+P107. DOM操作Css样式
+	- 通过JS修改元素的样式：
+		语法：元素.style.样式名 = 样式值	   //样式值要为字符串
+		- 注意：如果修改的css样式中含有"-"，如：background-color
+			我们需要改用驼峰命名法，如：backgroundColor
+		- 我们通过JS设置的样式属性都是行内样式的，所以一般情况下优先级最高，修改后的样式往往会立即显示
+			但是如果我们在css样式表中定义的样式包含了"!important"，则有可能出现意外，导致JS设置样式失效
+	
+	- 读取元素的样式
+		语法：元素.style.样式名
+		注意：由于我们修改元素的样式只能修改到行内样式中，所以我们读取元素样式的时候也只能读取行内样式
+		
+	- 获取元素当前显示的样式
+		方法一：
+			！！！注意：此方法仅IE支持，其他浏览器不支持
+			语法：元素.currentStyle.样式名
+			这个方法就可以显示css样式表中的样式了，因为这是当前显示什么就返回什么值。
+				如果属性值在样式表中未定义，则返回默认值，如宽度默认auto，背景默认透明
+		方法二：
+			使用getComputedStyle(参数1，参数2).样式名
+			参数1：要获取的元素节点
+			参数2：传递一个伪类元素，没有可传null
+				这是一个window对象的方法，所以可以和alert一样直接调用。
+					该方法返回的是一个对象，我们可以用".对象名"来获取对象的样式属性
+					如果样式的属性没有设置，也会返回一个具体的值，而不是默认值。
+						如：获取width属性，没有设置时可能会随着父标签的长度改变而改变，我们用这个方法可以获取到父元素的长度
+			// 此方法IE8及以下的浏览器不支持
+			
+		== 通过currentStyle和getComputedStyle获取到的样式都是只读的，不可修改的，所以要修改还是要用style属性 ==
+		
+		方法三：
+			方法三就是有我们自定义一个函数，其中包括前两种方法，视情况返回哪种方法
+			如：	
+				function getSty(obj,name){		// obj为元素节点对象，name为需要获取的样式名
+					if(window.getComputedStyle){		//如果网页有getComputedStyle方法，就执行此方法，不然就执行另一种方法
+						return getComputedStyle(obj,null)[name];		//注意：由于这里使用变量调用，所以不能使用点操作符来获取，要使用[]来获取
+					}else{
+						return obj.currentStyle[name];
+					}
+				}
+				
+P110. 其他样式修改相关的属性
+	- 注意：以下方法返回的都是一个整数，如宽度不显示px，只显示数值
+		并且下面的方法都是只读的，不能修改，如果要修改使用style方法
+	1. clientWidth 和 clientHeight
+		- 获取元素的可见宽度和可见高度，注意是可见高度和宽度
+			如果样式表中设置的宽度为200px，但是由于内边距或其他原因显示的实际宽度更高，以实际的可见宽度为准，但是不包括边框宽度！
+				返回的数值是不含px的宽度和高度
+		- 语法：元素节点.clientWidth
+	
+	2. offsetWidth 和 offsetHeight
+		- 获取元素的整个高度和宽度
+			这个不仅获取了可见宽度，包括内边距，边框都会算上去，是整个元素的宽度
+		- 语法：元素节点.offsetWidth
+
+	3. offsetParent
+		- 获取元素的定位父元素
+			注意是"定位"父元素，所以获取到的其实是离当前元素最近的开启定位的祖先父元素，如果所以祖先元素都没有开启定位，则默认返回body
+		- 语法：元素节点.offsetparent
+	
+	4. offsetTop 和 offsetLeft
+		- 获取元素其定位父元素的垂直偏移量和水平偏移量
+			注意：这里还是和上面一样，需要有开启定位的祖先父元素
+		- 语法：元素节点.offsetTop
+	
+	5. scrollWidth 和 scrollHeight
+		- 获取元素整个滚动区域的宽度
+			我们设置的子元素有时候可能会比父元素更宽或高，此时我们可能会使用overflow来设置子元素的显示方式
+				此方法可以获取到子元素真实的高度，或者父元素加上隐藏区域的高度
+		- 语法：元素节点.scrollWidth
+	
+	6. scrollLeft 和 scrollTop
+		- 可以获取水平滚动条的和垂直滚动条滑动的距离
+			需要在有滚动条的时候使用，不然返回0
+				此方法在谷歌浏览器和个别浏览器返回的是小数！！
+			
+	7. 两个重要等式
+		- 当满足scrollHeight - scrollTop == clientHeight		//说明垂直滚动条拖动到底了
+		- 当满足scrollWidth - scrollLeft == clientWidth			//说明水平滚动条拖动到底了
+		因为clientHeight代表的是可见的高度，而scrollHeight代表着整个滚动区域的高度，当滚动的区域-滚动的距离的时候，减到0了，说明就到底了
+		如果遇到等式两端有小数的情况，可以使用parseInt()取整
+		
+	8. 表单disable属性
+		如果一个表单控件的标签中的disable="disable"时，该表单控件为不可用
+		如果JS获取元素节点后，我们需要让表单控件不可以，可以让disable=true，反之可用为disable=false
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

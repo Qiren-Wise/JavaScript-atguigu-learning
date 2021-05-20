@@ -1,0 +1,131 @@
+P91. DOM简介
+详细看视频P91
+大概总结一下：
+DOM的意思是文档对象模型，文档指整个网页，对象指的是网页中的一切标签，网页里的一切都是对象。而由文档构成的一个树状图就是一个模型
+同时网页还具有节点——构成HTML文档的基本单元，分别有：文档节点、元素节点、属性节点、文本节点
+
+P92. 事件的简介
+	事件就是浏览器或者文档中发生的一些特定的交互瞬间，比如：单击、双击、滑动....
+	onclick -- 单击
+	ondblclick -- 双击
+	onmousemove -- 鼠标移动到此位置
+	....	(更多事件可参考W3school)
+	我们可以给一个按钮绑定这些事件，如：
+	var bth = document.getElementById("bth");
+	bth.onclick = function(){alert("哈哈");};
+
+P93. 文档的加载
+- 浏览器在加载一个页面时，是自上而下加载的
+	所以写在最上面的js语句有可能识别不到body标签内的内容
+	我们要解决这种问题有两种方法：
+		1. 把js文件写在body的最下面，等上面的内容加载完成再加载js文件
+		2. 如果js文件非要写在开头，我们可以定义一个事件，让页面加载完成后再执行js语句
+				- 我们可以使用onload事件，此事件的对象是window，使用window.onload调用
+					如:	
+						window.onload = function(){ 内容 };		//内容中的js语句会在页面加载完成后调用
+		- 如果要让用户体验更好，使用方法1把js写在最下面会更好点
+			因为写在最上面意味着加载完成的js语句会有很长事件不调用，提高浏览器加载负担，但是影响也不是特别大
+			
+P94. 	DOM查询
+> 获取元素节点
+	- 通过document对象调用
+		1. getElementById()   // 通过id属性获取一个元素节点对象，如：id = "one"....
+		2. getElementsByTagName()   // 通过标签名获取一组元素节点对象，如:<div> <p>....
+		3. getElementsByName()   //通过name属性获取一组元素节点对象，如：表单中的name属性...
+
+	查找一组元素节点时，获取到的是一个类数组的参数，我们可以和数组一样调用它，，如getElementsByTagName()
+	使用方法：var a = document.getElementsByTagName("div");	//获取所有标签为div的元素，此时a为一个类数组
+			console.log(a[0].innerHTML);	//控制台输出第一个div标签的内容
+			
+	但是注意getElementsByName()，这个用于获取表单中name的元素节点，虽然也是返回一个类数组，但是对于自结束标签，innerHTML没用意义！
+		我们如果需要读取元素节点的属性，
+			可以直接使用：元素.value、元素.name、元素.id ....
+				但是如果我们要获取元素class定义的值，需要使用：元素.className，不能只能.class！
+
+> 获取元素节点的子节点
+	- 通过具体的元素节点调用
+		1. getElementByTagName()   //方法，返回当前节点指定标签名的后代节点
+		2. childNodes	//属性，表示当前节点的所有子节点
+		3. firstChild  //属性，表示当前节点的第一个子节点
+		4. lastChild	//属性，表示当前节点的最后一个子节点
+		注意：只要是节点都包含空白节点，即换行、空格....
+		
+	- getElementByTagName()
+		此方法和上面document对象中的方法大概相同，只不过上面的是获取整个网页的标签对象，这个只调用后代中的标签对象
+		
+	- childNodes	
+		childNodes属性会获取包括文本节点在内的所有子节点，并且DOM标签之间的空白部分也会当成文本，所有调用时要注意排版格式
+		注意：在IE8以及下版本的浏览器中，不会把空白节点当成子节点，其实如果我们想统一起来，都不要把空白节点当成子节点，可以使用children
+		如：var lis = city.children		
+	
+	- firstChild和lastChild
+		这两个分别是获取元素节点的第一个和最后一个子节点，同样会包含空白节点
+			如果我们想不包含空白节点，可以使用firstElementChild，后者同理
+				不过使用firstElementChild有个缺点就是IE8以下的版本不兼容，所以需要注意使用
+
+> 获取父节点和兄弟节点
+	- 通过具体的节点调用
+		1. parentNode		//属性，表示当前节点的父节点
+		2. previousSibling	//属性，表示当前节点的前一个兄弟节点
+		3. nextSibling	//属性，表示当前节点的后一个兄弟节点
+
+	- parentNode
+		可以找到当前节点的父节点，如我们定义了一个li节点，然后可以通过这个li节点找到ul节点，但是返回的并不是一个数组，所以ul节点的所有内容都是在一起的
+		包括li标签的标签名称，所以我们可以使用innerText
+		# innerText
+			该属性可以获取元素内部的纯文本内容，而HTML是包含元素内部的包含元素标签的文本内容
+		如：
+			<script type = "text/javascript">
+				 mybtn("btn4",function(){
+						var bj = document.getElementById("bj");
+						var city = bj.parentNode;
+						alert(city.innerText);		//这里不包含<li>
+						alert(city.innerHEML);	//这里包含<li>				
+				});
+			</script>
+			<ul id="city"> 
+				<li id="bj">北京</li>
+				<li>上海</li>
+				<li>福州</li>
+				<li>泉州</li>
+				<li>天津</li>
+			</ul>
+			
+	- previousSibling
+		返回前一个兄弟节点，既然是节点，就包含空白节点，所以要注意空白节点。
+		同样我们可以使用previousElementSibling来获取兄弟元素，不过同样IE8以下版本不支持，要注意兼容问题
+	
+	注意：除了用innerHTML和innerText可以获取元素内容以外，我们节点的属性都有三个节点的属性，可看附录图片"节点的属性.png"
+		文本节点的nodeValue正好是文本内容，所以我们的文本内容可以通过先查找兄弟节点，找使用nodeValue获得
+		如：
+		<script type = "text/javascript">
+				 mybtn("btn4",function(){
+                var bj = document.getElementById("bj");
+                alert(bj.firstChild.nodeValue);		//这里的效果和innerHTML一样
+            });
+		</script>
+		<ul id="city"> 
+            <li id="bj">北京</li>
+            <li id="sh">上海</li>
+        </ul>
+		
+P101.  一些DOM技巧
+	- 获取body标签
+		var body = document.body;	//这样可以直接获取body标签，不要getElementByTagName...
+	- 获取html根标签
+		var html = document.documentElement;
+	- 获取页面中的所有元素标签
+		1. var all = document.all;		//页面中只要存在的标签都会以类数组的形式赋值给all
+		2. var all = document.getElementById("*");
+		//这两种方法都一样的，不过第一中方法会更简单
+	- 获取页面中类属性
+		var cls = document.getElementsByClassName("one");		//可以获得所有类名为"one"的标签，返回一个类数组
+		//在IE8以以下的浏览器中不兼容
+	- 根据css选择器调用元素节点对象
+		var q = document.querySelector(".one");		//括号内填需要的元素节点对象，就如同css一样
+		//兼容IE8浏览器，所有我们获取类元素节点最好用这个方法
+		//使用该方法只会返回唯一的元素，即使有多个可匹配的结果，它也只会返回第一个，如果就要获取多个，可以使用下方的方法
+	- 获取多个css选择器元素节点
+		var q = document.querySelectorAll(".one");
+		//此方法和querySelector用法类似，只不过返回的是一个类数组对象，他会将符合条件的都返回
+		//即使符合条件的元素只有一个，也是只返回数组
