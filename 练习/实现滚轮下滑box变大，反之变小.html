@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style type="text/css">
+        #box1{
+            width: 100px;
+            height: 100px;
+            background-color: red;
+        }
+    </style>
+
+    <script type="text/javascript">
+        window.onload = function(){
+            var box1 = document.querySelector("#box1");
+						//滚轮事件
+            box1.onmousewheel = function(event){
+                event = event || window.event; 
+              	//wheelDelta>0为普通浏览器向上滚，event.detail<0为火狐浏览器向上滚
+                if (event.wheelDelta > 0 || event.detail < 0){
+                  	//判断，往上滚最小不能小于10px
+                    box1.style.height = box1.clientHeight >= 60 ? box1.clientHeight - 50 + "px" : 10 + "px";
+                }
+                else{
+                  	//往下滚边长
+                    box1.style.height = box1.clientHeight + 50 + "px";
+                }
+              	//取消浏览器默认行为
+                event.preventDefault && event.preventDefault();
+                return false;
+            }  
+          
+						//利用前几节课学到bind函数，回调函数设置为box1的滚轮事件。
+            bind(box1,"DOMMouseScroll",box1.onmousewheel);
+            
+            function bind(obj,str,callback){
+                if (obj.addEventListener){
+                    obj.addEventListener(str,callback,false);
+                }
+                else{
+                    obj.attachEvent("on"+str,function(){
+                        callback.call(obj);
+                    });
+                }
+            }
+        }
+    </script>
+</head>
+<body style="height:2000px;">
+    <div id="box1"></div>
+</body>
+</html>
