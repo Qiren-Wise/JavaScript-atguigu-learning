@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="./style.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="./tools.js"></script>
+    <script type="text/javascript">
+        window.onload = function(){
+            var btn1 = document.querySelector("#btn1");
+            var btn2 = document.querySelector("#btn2");
+            var btn3 = document.querySelector("#btn3");
+            var btn4 = document.querySelector("#btn4");
+            var box1 = document.querySelector("#box1");
+            var box2 = document.querySelector("#box2");
+
+            btn1.onclick = function(){
+                move(box1,"left",800,30);
+            };
+
+            btn2.onclick = function(){
+                move(box1,"left",0,10);
+            };
+
+            btn3.onclick = function(){
+                move(box2,"width",800,10,function(){
+                    move(box2,"width",100,10);
+                });
+            }
+
+            btn4.onclick = function(){
+                move(box2,"width",100,10);
+            }
+        };
+    </script>
+</head>
+<body>
+    <button id="btn1" style="width: 100px;">box1向右移动</button>
+    <button id="btn2" style="width: 100px;">box1向左移动</button>
+    <button id="btn3" style="width: 100px;">box2向右移动</button>
+    <button id="btn4" style="width: 100px;">box2向左移动</button>
+    </br></br>
+    <div id="box1"></div>
+    <div id="box3"></div>
+    <div id="box2"></div>
+</body>
+</html>

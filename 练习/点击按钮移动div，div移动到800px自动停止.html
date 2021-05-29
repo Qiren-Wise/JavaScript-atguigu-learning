@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style type="text/css">
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        #box1{
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            position: absolute;
+            left:0;
+        }
+        #box2{
+            width: 0px;
+            border-right: 1px solid black;
+            height: 1000px;
+            background-color: black;
+            position: absolute;
+            top: 0px;
+            left: 800px;
+        }
+    </style>
+
+    <script type="text/javascript">
+        window.onload = function(){
+            var btn = document.querySelector("#btn");
+            var box1 = document.querySelector("#box1");
+            var timer;
+
+            btn.onclick = function(){
+                //每次点击按钮重置定时器
+                clearInterval(timer);
+                //开启定时器，执行移动效果
+                timer = setInterval(function(){
+                    //利用parseInt()方法，过滤掉字符串中的px字符，也可以使用正则表达式
+                    var oldLeft = parseInt(getStyle(box1,"left"));
+                    var newLeft = oldLeft + 12;
+                    if (newLeft > 800){
+                        newLeft = 800;
+                    }
+                    box1.style.left = newLeft + "px";
+                    
+                    if (newLeft === 800){
+                        //达到目标线，停止定时器
+                        clearInterval(timer);
+                    }
+                },20);
+
+
+            };
+
+            function getStyle(obj,str){
+                //利用或运算的优势，style等于网页中有的那个方法。
+                style = obj.currentStyle || window.getComputedStyle(obj,null);
+                return style[str];
+            }
+        };
+    </script>
+</head>
+<body>
+    <button id="btn">点击按钮向右移动div</button>
+    </br></br>
+    <div id="box1"></div>
+    <div id="box2"></div>
+</body>
+</html>
