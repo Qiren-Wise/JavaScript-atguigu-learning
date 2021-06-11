@@ -1,0 +1,40 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+#outer{
+    width: 620px;
+    height: 400px;
+    margin: 50px auto;
+    background-color: rgb(122, 226, 240);
+    padding: 10px 0;
+    position: relative;
+    overflow: hidden;
+}
+#imgList{
+    list-style: none;
+    position: absolute;
+    left: 0px;
+}
+#imgList li{
+    float: left;
+    margin: 0 10px;
+}
+#navDiv{
+    position: absolute;
+    bottom: 20px;
+}
+#navDiv a{
+    float: left;
+    width: 15px;
+    height: 15px;
+    background-color: rgb(255, 99, 71);
+    opacity: 0.7;
+    transition: 50ms;
+    /*透明度兼容IE8*/
+    filter: alpha(opacity=50);
+    margin: 0 5px;
+}
+#navDiv a:hover{
+    background-color: rgb(112, 170, 218);
+}

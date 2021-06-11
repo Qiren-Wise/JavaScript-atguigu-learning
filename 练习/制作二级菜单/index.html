@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    <link type="text/css" rel="stylesheet" href="./css/style.css"/>
+    <script  type="text/javascript" src="./js/tools.js"></script>
+    <script type="text/javascript">
+        window.onload = function(){
+            /*每一个菜单都是一个div
+            * 当div具有collapsed这个类时，div就是折叠状态
+            * 反之就是展开状态
+            */
+            //获取所有类名为menuSpan的标签
+            var menuSpan = document.querySelectorAll(".menuSpan");
+            //定义一个变量，保存当前以打开的菜单
+            var openDiv = menuSpan[0].parentNode;
+
+            for (var i = 0;i<menuSpan.length;i++){
+                menuSpan[i].onclick = function(){
+                    /* alert("hh"); */
+                    var parentDiv = this.parentNode;
+                    toggleMenu(parentDiv);
+                    //判断parentDiv和openDiv是否相等
+                    if (parentDiv != openDiv && !hasClass(openDiv,"collapsed")){
+                        //关闭当前打开的菜单
+                        toggleMenu(openDiv);
+                    }
+                    
+                    openDiv = parentDiv;
+                }
+            }
+
+            function toggleMenu(obj){
+                var begin = obj.offsetHeight;
+                    //切换菜单的展开与折叠
+                toggleClass(obj,"collapsed");
+                var end = obj.offsetHeight;
+                //执行动画，从begin向end过渡
+                obj.style.height = begin + "px";
+                move(obj,"height",end,10,function(){
+                    obj.style.height = ""
+                });
+            }
+        };
+    </script>
+</head>
+<body>
+    <div id="my_menu" class="sdmenu">
+        <div style="overflow: hidden;">
+            <span class="menuSpan">在线工具</span>
+            <a href="#">图像优化</a>
+            <a href="#">图标生成器</a>
+            <a href="#">邮件</a>
+            <a href="#">password密码</a>
+            <a href="#">地图图像</a>
+            <a href="#">按钮生成器</a>
+        </div>
+        <!--collapsed意为折叠-->
+        <div class="collapsed" style="overflow: hidden;">
+            <span class="menuSpan">支持我们</span>
+            <a href="#">推荐我们</a>
+            <a href="#">关心我们</a>
+            <a href="#">了解我们</a>
+        </div>
+
+        <div class="collapsed" style="overflow: hidden;">
+            <span class="menuSpan">合作伙伴</span>
+            <a href="#">腾讯视频</a>
+            <a href="#">阿里巴巴集团</a>
+            <a href="#">网易邮箱</a>
+        </div>
+
+        <div class="collapsed" style="overflow: hidden;">
+            <span class="menuSpan">测试电流</span>
+            <a href="#">what you name?</a>
+            <a href="#">what you name?</a>
+            <a href="#">what you name?</a>
+        </div>
+    </div>
+</body>
+</html>

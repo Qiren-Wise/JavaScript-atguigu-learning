@@ -1,0 +1,45 @@
+*{
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+a,img{
+    border: 0;
+    text-decoration: none;
+}
+body{
+    font: 12px/180% Arial, Helvetica,sans-serif,"新宋体";
+}
+
+#my_menu{
+    width: 200px;
+    text-align: center;
+    background-color: blanchedalmond;
+    margin: 50px auto;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 10px;
+    padding-bottom: 10px;
+    overflow: hidden;
+}
+.collapsed{
+    width: 100%;
+    height: 25px;
+    margin: 3px 0;
+}
+.menuSpan{
+    display: block;
+    line-height: 25px;
+    background-color: rgb(95, 216, 166);
+}
+a{
+    display: block;
+    color: rgb(16, 39, 16);
+    height: 30px;
+    line-height: 30px;
+    transition: 70ms all;
+}
+a:hover{
+    background-color: brown;
+    color: white;
+}
